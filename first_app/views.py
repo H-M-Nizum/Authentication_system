@@ -5,6 +5,8 @@ from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm, SetPasswordForm
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 # Create your views here.
+from django.contrib.auth.decorators import login_required
+
 
 def user_signup(request):
     if not request.user.is_authenticated:
@@ -14,6 +16,7 @@ def user_signup(request):
             if form.is_valid():
                 messages.success(request, 'Account create susccessfully')
                 form.save()
+                return redirect('login')
         else:
             form = RegistationForm()
         return render(request, 'signup.html', {'form': form})
@@ -44,7 +47,7 @@ def userlogin(request):
     else:
         return redirect('user_signup')
  
-    
+@login_required    
 def profile(request):
     if request.user.is_authenticated:
         return render(request, 'profile.html', {'user': request.user})
@@ -67,6 +70,7 @@ def passward_change(request):
                 form.save()
                 # password update 
                 update_session_auth_hash(request, form.user)
+                messages.success(request, 'password change with old password susccessfully')
                 return redirect('profile')
         else:
             form = PasswordChangeForm(user=request.user)
@@ -85,6 +89,7 @@ def passward_change2(request):
                 form.save()
                 # password update 
                 update_session_auth_hash(request, form.user)
+                messages.success(request, 'password change without old password susccessfully')
                 return redirect('profile')
         else:
             form = SetPasswordForm(user=request.user)
