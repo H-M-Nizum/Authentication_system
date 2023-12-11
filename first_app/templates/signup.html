@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block title %}Home{% endblock title %}
+
+{% block content %}
+<div class="container">
+    <h1>This is Signup page</h1>
+    <form method="post" novalidate>
+        {% csrf_token %}
+        <!-- {{form | crispy}} -->
+
+        <!-- if i want to don't show the help text always -->
+        {% for fm in form %}
+            <div>
+                {{fm.label_tag}}
+                {{fm}}
+                {{fm.errors|striptags}}
+            </div>
+           
+        {% endfor %}
+        <br>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+{% endblock content %}
