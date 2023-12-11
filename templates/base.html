@@ -16,22 +16,40 @@
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
               <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#">Home</a>
+                <a class="nav-link active" aria-current="page" href="{% url 'home' %}">Home</a>
               </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Link</a>
-              </li>
-              
+
               
             </ul>
             <div class="d-flex">
-              <a class="btn btn-primary" href="{% url 'user_signup' %}">Signup</a>
-              <a class="btn btn-info mx-3" href="">Login</a>
+
+                {% if user.is_authenticated %}
+                <a href="{% url 'profile' %}" class="btn btn-outline-success" >Profile</a>
+                <a href="{% url 'logout' %}" class="btn btn-outline-warning mx-4" >Logout</a>
+                {% else %}
+                <a class="btn btn-primary" href="{% url 'user_signup' %}">Signup</a>
+                <a class="btn btn-info mx-3" href="{% url 'login' %}">Login</a>
+    
+                {% endif %}
+
+
+
             </div>
           </div>
         </div>
       </nav>
-
+      {% if messages %}
+      <div style="width: 50%; margin: auto">
+          <ul class="messages bg-secondary p-2 text-white">
+              {% for message in messages %}
+              <li style="text-align: center;" {% if message.tags %} class="{{ message.tags }}"{% endif %}>
+                  {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
+                  {{ message }}
+              </li>
+              {% endfor %}
+          </ul>
+      </div>
+  {% endif %}
 
 
     {% block content %}{% endblock content %}
